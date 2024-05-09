@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-app-ingress
+#  annotations:
+#    kubernetes.io/ingress.class: gce
+#    kubernetes.io/ingress.global-static-ip-name: "ingress-webapps"
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend-server
+                port:
+                  number: 3000
+          - path: /api/auth
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-server
+                port:
+                  number: 3001
+          - path: /api/calculate
+            pathType: Prefix
+            backend:
+              service:
+                name: calculator-server
+                port:
+                  number: 3002

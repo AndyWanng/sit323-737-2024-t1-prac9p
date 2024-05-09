@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-server-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend-server
+  template:
+    metadata:
+      labels:
+        app: frontend-server
+    spec:
+      containers:
+        - name: frontend-server
+          image: sizhewang0916/sit323-task-calculator:frontend
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: FRONTEND_PORT
+              value: "3000"
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_SECRET_KEY
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-server
+spec:
+  type: ClusterIP
+  selector:
+    app: frontend-server
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
